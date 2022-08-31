@@ -1,7 +1,7 @@
-﻿// tasklib3.cpp : Defines the entry point for the application.
+﻿// tasklib.cpp : Defines the entry point for the application.
 //
 
-#include <tasklib3.h>
+#include <tasklib.h>
 
 using namespace std;
 

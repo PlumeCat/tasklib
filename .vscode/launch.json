@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Launch",
+            "program": "${workspaceFolder}/build/tasklib",
+            "args": [],
+            "preLaunchTask": "Build - Debug",
+            "cwd": "${workspaceRoot}"
+        }
+    ]
+}
