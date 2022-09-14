@@ -3,6 +3,8 @@
         "*.xmacro": "cpp",
         "*.str": "rust",
         "__split_buffer": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "iosfwd": "cpp",
+        "string": "cpp"
     }
 }

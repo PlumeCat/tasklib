@@ -24,7 +24,14 @@ using namespace std;
 #define move_default(cls) move_type(cls, default);
 
 
-using TaskFunction = function<void()>;
+// configuration
+// #define TASKLIB_FLAG_TYPE_SIMPLE
+#define TASKLIB_FLAG_TYPE_ATOMIC_FLAG
+#include "simple_flag.h"
+#include "config_flag.h"
+
+// using TaskFunction = function<void()>;
+using TaskFunction = void(*)(size_t);
 
 // the Task storage type
 // not much use for this class on its own outside of a TaskSet
@@ -66,29 +73,6 @@ private:
 	unordered_map<string, unordered_set<string>> reverse_deps;
 };
 
-// TODO: replace this with atomic_flag as soon as the wait() and so on methods are available
-class simple_flag {
-public:
-	copy_disable(simple_flag);
-	simple_flag();
-	simple_flag(simple_flag&&) noexcept;
-	simple_flag& operator=(simple_flag&&) noexcept;
-	~simple_flag() = default;
-
-	// wait until flag is true
-	void wait();
-	// set the flag to true; notifies all waiting threads
-	void set();
-	// reset the flag to false
-	void clear();
-
-private:
-	atomic_bool flag;
-	condition_variable cv;
-	mutex mtx;
-};
-
-
 /*
 * Despite the fact that TaskEngine uses threads, it should not be considered thread-safe in and of itself.
 * run() will block the calling thread until the task set is complete - tasks are also executed in the calling thread.
@@ -120,11 +104,9 @@ private:
 	struct QueueTask {
 		TaskFunction func;
 		vector<size_t> dependencies;
-		// simple_flag is_complete;
-		simple_flag is_complete;
+		TasklibFlag is_complete;
 		
 		copy_disable(QueueTask);
-		// move_default(QueueTask);
 		QueueTask(QueueTask&&) noexcept;
 		QueueTask& operator=(QueueTask&&) noexcept;
 
@@ -134,10 +116,7 @@ private:
 	};
 	vector<QueueTask> task_queue;
 	atomic_uint queue_pos;
-
-	// tasks available flag
-	// simple_flag has_tasks;
-	simple_flag has_tasks;
+	TasklibFlag has_tasks;
 
 	// worker threads
 	vector<thread> threads;
