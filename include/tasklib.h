@@ -120,10 +120,14 @@ private:
 	struct QueueTask {
 		TaskFunction func;
 		vector<size_t> dependencies;
+		// simple_flag is_complete;
 		simple_flag is_complete;
 		
 		copy_disable(QueueTask);
-		move_default(QueueTask);
+		// move_default(QueueTask);
+		QueueTask(QueueTask&&) noexcept;
+		QueueTask& operator=(QueueTask&&) noexcept;
+
 		QueueTask() = delete;
 		QueueTask(const TaskFunction& func, const vector<size_t>& deps);
 		~QueueTask() = default;
@@ -132,6 +136,7 @@ private:
 	atomic_uint queue_pos;
 
 	// tasks available flag
+	// simple_flag has_tasks;
 	simple_flag has_tasks;
 
 	// worker threads

@@ -147,7 +147,8 @@ TaskSet TaskSetBuilder::build() const {
 }
 
 
-TaskEngine::TaskEngine(size_t num_threads) {
+TaskEngine::TaskEngine(size_t num_threads): has_tasks() {
+	has_tasks.clear();
 	for (auto i = 0; i < num_threads; i++) {
 		threads.emplace_back(&TaskEngine::thread_main, this, i+1);
 	}
@@ -155,9 +156,16 @@ TaskEngine::TaskEngine(size_t num_threads) {
 TaskEngine::~TaskEngine() {
 	// push one "exit" task per worker thread so worker threads progress
 	should_exit = true;
-	add_tasks(TaskSet(move(vector<Task>(threads.size(), { "exit", move(vector<size_t>{}), [] {
-		printf("EXIT TASK\n");
-	} }))));
+	
+	auto exit_task = []{ printf("EXIT TASK\n"); };
+	add_tasks(TaskSet(
+		vector<Task>(
+			threads.size(),
+			{ "exit", move(vector<size_t>{}), exit_task }
+		)
+	));
+	// task_queue.clear();
+	// add_tasks(TaskSet({}));
 
 	// wait for worker threads to exit (no need to wait for exit task completion, it's implicit)
 	for (auto& t: threads) {
@@ -170,11 +178,16 @@ void TaskEngine::add_tasks(const TaskSet& task_set) {
 	// rather than continually destroying and recreating as here
 	task_queue.clear();
 	for (const auto& t : task_set.tasks) {
-		task_queue.emplace_back(t.func, t.dependencies);
+		// task_queue.emplace_back(t.func, t.dependencies);
+		task_queue.emplace_back(move(QueueTask(t.func, t.dependencies)));
 	}
 
 	queue_pos.store(0);
+	// printf("Setting has_tasks: (%d)\n", task_queue.size());
+	
 	has_tasks.set();
+	// has_tasks.test_and_set();
+	// has_tasks.notify_all();
 }
 
 void TaskEngine::run(const TaskSet& task_set) {
@@ -195,15 +208,17 @@ void TaskEngine::run(const TaskSet& task_set) {
 	for (auto i = 0; i < task_queue.size(); i++) {
 		// wait_for_task_complete(i);
 		task_queue[i].is_complete.wait();
+		// task_queue[i].is_complete.wait(true);
 	}
 }
 
 void TaskEngine::thread_main(size_t thread_id) {
 	while (!should_exit) {
 		// wait for tasks to appear
+		// has_tasks.wait(true);
 		has_tasks.wait();
 		auto task_index = queue_pos.fetch_add(1);
-		if (task_index < task_queue.size()) {
+		if (task_queue.size() && task_index < task_queue.size()) {
 			do_task(task_index);
 		} else {
 			has_tasks.clear();
@@ -216,6 +231,7 @@ void TaskEngine::do_task(size_t task_index) {
 
 	// wait for dependencies
 	for (auto s : task.dependencies) {
+		// task_queue[s].is_complete.wait(true);
 		task_queue[s].is_complete.wait();
 	}
 
@@ -225,9 +241,20 @@ void TaskEngine::do_task(size_t task_index) {
 	}
 
 	// notify threads that depend on this task
+	// task.is_complete.test_and_set();
+	// task.is_complete.notify_all();
 	task.is_complete.set();
 }
 
 TaskEngine::QueueTask::QueueTask(const TaskFunction& func, const vector<size_t>& deps):
 	func(func),
-	dependencies(deps) {}
+	dependencies(deps),
+	// is_complete(ATOMIC_FLAG_INIT) {}
+	is_complete() { is_complete.clear(); }
+
+TaskEngine::QueueTask::QueueTask(TaskEngine::QueueTask&& t) noexcept:
+	// is_complete(ATOMIC_FLAG_INIT) {}
+	is_complete() { is_complete.clear(); }
+// TaskEngine::QueueTask& TaskEngine::QueueTask::operator=(TaskEngine::QueueTask&& t) {
+// 	is_complete.clear();
+// }

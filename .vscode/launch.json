@@ -4,7 +4,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Launch",
-            "program": "${workspaceFolder}/build/tasklib",
+            "program": "${workspaceFolder}/build/tasklib_test",
             "args": [],
             "preLaunchTask": "Build - Debug",
             "cwd": "${workspaceRoot}"

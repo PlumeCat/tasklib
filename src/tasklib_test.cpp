@@ -6,12 +6,13 @@
 using namespace std;
 
 void test_task() {
+	printf("test_task\n");
 	this_thread::sleep_for(chrono::microseconds(50 + rand() % 1000));
 }
 
 TaskSet make_test_set() {
-	auto MAX_TASKS = 20;
-	auto MIN_TASKS = 10;
+	auto MAX_TASKS = 200;
+	auto MIN_TASKS = 100;
 	auto num_tasks = MIN_TASKS + rand() % (MAX_TASKS - MIN_TASKS);
 
 	// make random names
@@ -22,7 +23,7 @@ TaskSet make_test_set() {
 
 	auto builder = TaskSetBuilder();
 	for (int i = 0; i < num_tasks; i++) {
-		// can depend on previous tasks with 
+		// can depend on previous tasks
 		auto deps = unordered_set<string> {};
 		for (int j = 0; j < i - 1; j++) {
 			if (rand() % 100 < 50) {
@@ -41,9 +42,9 @@ int main() {
 
 	for (int i = 0; i < 100; i++) {
 		auto set = make_test_set();
-		cout << "running test: " << i << "...";
+		printf("running test: %d\n", i);
 		engine->run(set);
-		cout << "done" << endl;
+		printf("done\n");
 	}
 
 	engine.reset();
