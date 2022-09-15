@@ -193,8 +193,7 @@ void TaskEngine::thread_main(size_t thread_id) {
 	}
 }
 
-void TaskEngine::do_task(size_t task_index, size_t thread_id) {
-	// log("doing task: ", task_index);
+void TaskEngine::do_task(size_t task_index) {
 	auto& task = task_queue[task_index];
 
 	// wait for dependencies
@@ -204,7 +203,7 @@ void TaskEngine::do_task(size_t task_index, size_t thread_id) {
 
 	// run task
 	if (task.func) {
-		task.func(thread_id);
+		task.func();
 	}
 
 	// notify threads that depend on this task

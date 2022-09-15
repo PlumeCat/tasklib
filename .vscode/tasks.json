@@ -7,7 +7,7 @@
             "command": "make",
             "problemMatcher": "$gcc",
             "options": {
-                "cwd": "${workspaceRoot}/build"
+                "cwd": "${workspaceRoot}/build/Debug"
             },
             "group": {
                 "kind": "build",
@@ -15,14 +15,48 @@
             }
         },
         {
-            "label": "CMake - Debug",
+            "label": "Build - Release",
             "type": "shell",
-            "command": "cmake .. -G 'Unix Makefiles'",
+            "command": "make",
+            "problemMatcher": "$gcc",
             "options": {
-                "cwd": "build",
+                "cwd": "${workspaceRoot}/build/Release"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "CMake - Generate Debug",
+            "type": "shell",
+            "command": "cmake '${workspaceFolder}' -G 'Unix Makefiles'",
+            "options": {
+                "cwd": "${workspaceFolder}/build/Debug",
                 "env": {
                     "CMAKE_BUILD_TYPE": "Debug"
                 }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "CMake - Generate Release",
+            "type": "shell",
+            "command": "cmake '${workspaceFolder}' -G 'Unix Makefiles'",
+            "options": {
+                "cwd": "${workspaceFolder}/build/Release",
+                "env": {
+                    "CMAKE_BUILD_TYPE": "Release"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean Build Folder",
+            "type": "shell",
+            "command": "rm -r build/",
+            "options": {
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": []
         }

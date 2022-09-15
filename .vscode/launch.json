@@ -3,10 +3,18 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Launch",
-            "program": "${workspaceFolder}/build/tasklib_test",
+            "name": "Launch Debug",
+            "program": "${workspaceFolder}/build/Debug/tasklib_test",
             "args": [],
             "preLaunchTask": "Build - Debug",
+            "cwd": "${workspaceRoot}"
+        }, {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Launch Release",
+            "program": "${workspaceFolder}/build/Release/tasklib_test",
+            "args": [],
+            "preLaunchTask": "Build - Release",
             "cwd": "${workspaceRoot}"
         }
     ]

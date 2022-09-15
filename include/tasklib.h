@@ -1,7 +1,4 @@
-﻿// tasklib.h : Include file for standard system include files,
-// or project specific include files.
-
-#pragma once
+﻿#pragma once
 
 #include <iostream>
 #include <string>
@@ -30,8 +27,7 @@ using namespace std;
 #include "simple_flag.h"
 #include "config_flag.h"
 
-// using TaskFunction = function<void()>;
-using TaskFunction = void(*)(size_t);
+using TaskFunction = function<void()>;
 
 // the Task storage type
 // not much use for this class on its own outside of a TaskSet
@@ -83,6 +79,9 @@ private:
 
 class TaskEngine {
 public:
+	copy_disable(TaskEngine);
+	move_disable(TaskEngine);
+	
 	// num_threads is the number of background threads
 	TaskEngine(size_t num_threads);
 	~TaskEngine();
@@ -92,18 +91,13 @@ public:
 	void run(const TaskSet& task_set);
 
 private:
-	copy_disable(TaskEngine);
-	move_disable(TaskEngine);
-
 	void add_tasks(const TaskSet& task_set);
-	
-	// stuff for thread workers
 	void thread_main(size_t thread_id);
 	void do_task(size_t task_index);
 
 	struct QueueTask {
 		TaskFunction func;
-		vector<size_t> dependencies;
+		vector<size_t> dependencies; // index into TaskEngine::task_queue
 		TasklibFlag is_complete;
 		
 		copy_disable(QueueTask);
