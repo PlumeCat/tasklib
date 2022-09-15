@@ -16,6 +16,10 @@ Task::Task(const string& name, vector<size_t>&& deps, const TaskFunction& tf):
 TaskSet::TaskSet(vector<Task>&& tasks):
 	tasks(tasks) {}
 
+size_t TaskSetBuilder::num_tasks() const {
+	return tasks.size();
+}
+
 TaskSetBuilder& TaskSetBuilder::add(const string& name, const unordered_set<string>& deps, const TaskFunction& func) {
 	if (tasks.find(name) != tasks.end()) {
 		tasklib_error("task already exists: " + name);

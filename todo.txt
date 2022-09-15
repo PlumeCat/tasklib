@@ -1,0 +1,13 @@
+- Clean up tests
+
+- Instrumentation: timings and collect statistics on tasks
+    - publish in tests
+    - make it accessible
+
+- Get to the bottom of why simple_flag is so much faster than atomic_flag
+
+- Get rid of `using namespace std` in root
+
+- Make single file / header only
+    - Use templates
+    - Or split with _IMPLEMENTATION guard, a la stb_* 

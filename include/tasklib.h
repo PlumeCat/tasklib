@@ -62,6 +62,7 @@ public:
 	// add a task of given name with list of dependencies and function
 	TaskSetBuilder& add(const string& name, const unordered_set<string>& deps, const TaskFunction& func);
 	TaskSet build() const;
+	size_t num_tasks() const;
 
 private:
 	unordered_map<string, TaskFunction> tasks;

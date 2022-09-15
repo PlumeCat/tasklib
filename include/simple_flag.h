@@ -9,7 +9,6 @@ using std::condition_variable;
 using std::atomic_bool;
 
 
-// TODO: replace this with atomic_flag as soon as the wait() and so on methods are available
 // TODO: why is this faster than atomic_flag?
 class simple_flag {
 public:

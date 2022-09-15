@@ -90,6 +90,22 @@ TaskSet make_linear_test_set() {
 
 TaskSet make_tree_test_set() {
 	auto builder = TaskSetBuilder{};
+
+	auto make_tree_task = [&](auto recurse, const string& parent, const string& name) -> void {
+		auto p = parent.size() 
+			? unordered_set<string>{ parent } 
+			: unordered_set<string>{};
+		builder.add(name,  p, test_task);
+		if (name.size() < 16) {
+			recurse(recurse, name, name + ".l");
+			recurse(recurse, name, name + ".r");
+		}
+	};
+
+	make_tree_task(make_tree_task, "", "root");
+
+	log("Tree test: ", builder.num_tasks(), " tasks");
+
 	return builder.build();
 }
 
@@ -107,7 +123,7 @@ void test_randomized() {
 
 void test_linear() {
 	auto engine = TaskEngine(7);
-	for (auto i = 0; i < 100; i++) {
+	for (auto i = 0; i < 20; i++) {
 		auto linear_set = make_linear_test_set();
 		log("running linear test");
 		engine.run(linear_set);
@@ -117,7 +133,7 @@ void test_linear() {
 
 void test_tree() {
 	auto engine = TaskEngine(7);
-	for (auto i = 0; i < 100; i++) {
+	for (auto i = 0; i < 20; i++) {
 		auto tree = make_tree_test_set();
 		log("running tree-shaped test");
 		engine.run(tree);
@@ -126,8 +142,8 @@ void test_tree() {
 }
 
 int main() {
-	test_randomized();
+	// test_randomized();
 	// test_linear();
-	// test_tree();
+	test_tree();
 	return 0;
 }
