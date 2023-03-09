@@ -6,9 +6,9 @@ void log(Args... args) {
 	(cout << ... << args) << endl;
 }
 
-
 #define tasklib_error(s) { log(s); throw runtime_error(s); }
 
+// Task
 Task::Task(const string& name, vector<size_t>&& deps, const TaskFunction& tf):
 	name(name),
 	dependencies(deps),
@@ -16,6 +16,8 @@ Task::Task(const string& name, vector<size_t>&& deps, const TaskFunction& tf):
 TaskSet::TaskSet(vector<Task>&& tasks):
 	tasks(tasks) {}
 
+
+// TaskSetBuilder
 size_t TaskSetBuilder::num_tasks() const {
 	return tasks.size();
 }
@@ -85,7 +87,8 @@ TaskSet TaskSetBuilder::build() const {
 	auto sorted = vector<Task> {}; // the final sorted list (will be moved-from)
 	sorted.reserve(tasks.size());
 	
-	auto roots = vector<pair<string, TaskFunction>> {}; roots.reserve(tasks.size());
+	auto roots = vector<pair<string, TaskFunction>> {};
+	roots.reserve(tasks.size());
 	auto processed_count = 0;
 
 	// construct the initial roots list

@@ -142,8 +142,8 @@ void test_tree() {
 }
 
 int main() {
-	// test_randomized();
-	// test_linear();
+	test_randomized();
+	test_linear();
 	test_tree();
 	return 0;
 }

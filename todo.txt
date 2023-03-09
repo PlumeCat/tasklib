@@ -1,4 +1,8 @@
+- Cycle detection in task set builder
+
 - Clean up tests
+
+- Non-blocking version of run() ?
 
 - Instrumentation: timings and collect statistics on tasks
     - publish in tests
@@ -6,8 +10,12 @@
 
 - Get to the bottom of why simple_flag is so much faster than atomic_flag
 
+- Pool flags, cvars and so on rather than recreating
+
 - Get rid of `using namespace std` in root
 
 - Make single file / header only
+    - Build with a script
     - Use templates
-    - Or split with _IMPLEMENTATION guard, a la stb_* 
+    - Or split with _IMPLEMENTATION guard, a la stb_*
+ 
