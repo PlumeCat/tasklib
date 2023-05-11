@@ -159,6 +159,7 @@ void TaskEngine::add_tasks(const TaskSet& task_set) {
 	// TODO: mutex and cvar / flag creation is expensive
 	// reuse/pool rather than continually destroying and recreating
 	task_queue.clear();
+	task_queue.reserve(task_set.tasks.size());
 	for (const auto& t : task_set.tasks) {
 		task_queue.emplace_back(t.func, t.dependencies);
 	}

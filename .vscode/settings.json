@@ -2,9 +2,20 @@
     "files.associations": {
         "*.xmacro": "cpp",
         "*.str": "rust",
+        "*.tack": "rust",
         "__split_buffer": "cpp",
         "vector": "cpp",
         "iosfwd": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "__hash_table": "cpp",
+        "array": "cpp",
+        "bitset": "cpp",
+        "initializer_list": "cpp",
+        "random": "cpp",
+        "string_view": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "iterator": "cpp",
+        "utility": "cpp"
     }
 }
