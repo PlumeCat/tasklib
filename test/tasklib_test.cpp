@@ -149,6 +149,7 @@ void test_tree() {
 // 	return 0;
 // }
 
+
 int i1 = 0;
 int i2 = 0;
 int i3 = 0;
@@ -167,6 +168,7 @@ void dependentTask() {
 	result = i1 + i2 + i3;
 }
 
+
 int main(int argc, char* argv[]) {
 	auto task_set = TaskSetBuilder()
 		.add("Task1", {}, task1)
@@ -175,9 +177,9 @@ int main(int argc, char* argv[]) {
 		.add("FinalCalc", { "Task1", "Task2", "Task3" }, dependentTask)
 		.build();
 
-    auto engine = make_unique<TaskEngine>(0); // N-1 background threads
+    auto engine = make_unique<TaskEngine>(10); // N-1 background threads
     engine->run(task_set);
-	log("Result: ", i1, i2, i3, result);
+	cout << "Result: " << i1 << ", " << i2 << ", " << i3 << ", " << result << endl;
     return 0;
 
 }

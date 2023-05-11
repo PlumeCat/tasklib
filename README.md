@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
 		.add("FinalCalc", { "Task1", "Task2", "Task3" }, dependentTask)
 		.build();
 
-    auto engine = unique_ptr<TaskEngine>(3); // N-1 background threads
+    auto engine = make_unique<TaskEngine>(3); // N-1 background threads
     engine->run(task_set);
 	cout << "Result: " << result << endl;
     return 0;
